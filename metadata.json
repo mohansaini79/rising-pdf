@@ -1,0 +1,7 @@
+{
+  "name": "The Rising Tribe Studios",
+  "description": "Premium Image to PDF Converter and PDF Editor with seamless cloud document vault integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
