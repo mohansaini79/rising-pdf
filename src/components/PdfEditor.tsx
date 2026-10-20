@@ -33,7 +33,6 @@ import {
 } from '../types';
 import { PdfEngine } from '../services/pdfEngine';
 import { CloudStorageService } from '../services/cloudStorage';
-import { HistoryService } from '../services/historyService';
 import { SignatureModal } from './SignatureModal';
 import { ShareModal } from './ShareModal';
 
@@ -417,20 +416,6 @@ export const PdfEditor: React.FC<PdfEditorProps> = ({
       };
 
       await CloudStorageService.saveDocument(docRecord);
-
-      // Record edit/signature in activity history
-      const hasSignature = annotations.some((a) => a.type === 'signature');
-      await HistoryService.addRecord({
-        title: docRecord.title,
-        actionType: hasSignature ? 'sign_document' : 'edit_pdf',
-        pageCount: docRecord.pageCount,
-        sizeBytes: docRecord.sizeBytes,
-        details: `Baked ${annotations.length} modifications (${hasSignature ? 'Digital Signature, ' : ''}annotations, stamps & watermarks)`,
-        status: 'Cloud Synced',
-        thumbnailUrl: thumb,
-        pdfDataUrl: dataUrl,
-      });
-
       setPdfDataUrl(dataUrl); // Set updated compiled PDF as new source
       setAnnotations([]); // Clear staged annotations since they are now baked in!
       setSaveSuccessMsg('All edits compiled & synced to Studio Cloud Vault');
@@ -568,25 +553,27 @@ export const PdfEditor: React.FC<PdfEditorProps> = ({
   // If no PDF loaded yet, show the import / starter hub
   if (!pdfDataUrl) {
     return (
-      <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-slate-800 bg-[#0C1220] p-8 sm:p-12 text-center shadow-2xl">
-          <div className="mx-auto h-20 w-20 rounded-3xl border border-sky-500/30 bg-[#070D18] p-1.5 shadow-xl flex items-center justify-center">
-            <img
-              src="/assets/aistudio/Gemini_Generated_Image_vz4sbhvz4sbhvz4s_4b141ba5.png"
-              alt="The Rising Tribe Logo"
-              className="h-full w-full object-contain"
-            />
+      <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border border-slate-800 bg-[#0C121E] p-8 sm:p-12 text-center shadow-2xl">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
+            <FileText className="h-8 w-8" />
           </div>
 
-          <h2 className="mt-5 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-amber-400">
+            <span>The Rising Tribe App Studio</span>
+            <span aria-hidden="true">·</span>
+            <span>Document Editor</span>
+          </div>
+
+          <h2 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
             PDF Studio Editor
           </h2>
-          <p className="mx-auto mt-2 max-w-xl text-xs text-slate-400">
+          <p className="mx-auto mt-2 max-w-xl text-sm text-slate-400">
             Annotate documents with custom typography, draw and apply digital signatures, embed
             official studio stamps, apply security watermarks, and redact sensitive fields.
           </p>
 
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <input
               ref={fileInputRef}
               type="file"
@@ -597,17 +584,17 @@ export const PdfEditor: React.FC<PdfEditorProps> = ({
 
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-2 rounded-2xl bg-sky-500 hover:bg-sky-400 text-slate-950 px-5 py-3 text-xs font-bold tracking-wide transition-all shadow-md active:scale-95 cursor-pointer"
+              className="flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 px-5 py-3 text-xs font-semibold tracking-wide transition-all shadow-sm active:scale-95 cursor-pointer"
             >
               <Upload className="h-4 w-4" />
-              <span>Open PDF from Device</span>
+              <span>Open PDF from Computer</span>
             </button>
 
             <button
               onClick={loadDefaultSamplePdf}
-              className="flex items-center gap-2 rounded-2xl border border-slate-700 hover:border-sky-500/40 bg-slate-900/90 hover:bg-slate-900 px-5 py-3 text-xs font-medium text-slate-200 transition-colors"
+              className="flex items-center gap-2 rounded-xl border border-slate-700 hover:border-amber-500/40 bg-slate-900/90 hover:bg-slate-900 px-5 py-3 text-xs font-medium text-slate-200 transition-colors"
             >
-              <Sparkles className="h-4 w-4 text-sky-400" />
+              <Sparkles className="h-4 w-4 text-amber-400" />
               <span>Load Studio Contract Template</span>
             </button>
           </div>

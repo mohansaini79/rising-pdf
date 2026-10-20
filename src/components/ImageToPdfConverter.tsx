@@ -19,7 +19,6 @@ import {
 import { ImageItem, PdfConversionSettings, PageSize, PageOrientation, FitMode, CloudDocument } from '../types';
 import { PdfEngine, normalizeImageToDataUrl } from '../services/pdfEngine';
 import { CloudStorageService } from '../services/cloudStorage';
-import { HistoryService } from '../services/historyService';
 
 interface ImageToPdfConverterProps {
   onOpenInEditor: (pdfDataUrl: string, title: string) => void;
@@ -312,17 +311,6 @@ export const ImageToPdfConverter: React.FC<ImageToPdfConverterProps> = ({
         ...result,
         dataUrl,
       });
-
-      // Record conversion in history
-      await HistoryService.addRecord({
-        title: documentTitle || 'Studio Document',
-        actionType: 'convert_image_pdf',
-        pageCount: result.pageCount,
-        sizeBytes: result.sizeBytes,
-        details: `Compiled ${images.length} images to ${settings.pageSize.toUpperCase()} (${settings.orientation})`,
-        status: 'Completed',
-        pdfDataUrl: dataUrl,
-      });
     } catch (err) {
       console.error('PDF conversion failed:', err);
     } finally {
@@ -361,19 +349,6 @@ export const ImageToPdfConverter: React.FC<ImageToPdfConverterProps> = ({
       };
 
       await CloudStorageService.saveDocument(docRecord);
-
-      // Record cloud sync in history
-      await HistoryService.addRecord({
-        title: docRecord.title,
-        actionType: 'cloud_sync',
-        pageCount: docRecord.pageCount,
-        sizeBytes: docRecord.sizeBytes,
-        details: `Synchronized to The Rising Tribe Cloud Vault`,
-        status: 'Cloud Synced',
-        thumbnailUrl: thumb,
-        pdfDataUrl: generatedPdf.dataUrl,
-      });
-
       setSavedToCloud(true);
       onDocumentSavedToCloud();
     } catch (e) {
@@ -393,39 +368,32 @@ export const ImageToPdfConverter: React.FC<ImageToPdfConverterProps> = ({
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6">
-      {/* Hero header with official logo */}
-      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800/80 pb-5">
-        <div className="flex items-start gap-3.5">
-          <img
-            src="/assets/aistudio/Gemini_Generated_Image_vz4sbhvz4sbhvz4s_4b141ba5.png"
-            alt="The Rising Tribe"
-            className="h-12 w-12 rounded-2xl object-contain border border-sky-500/30 bg-[#070D18] p-1 shadow-md shrink-0"
-          />
-          <div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-sky-400">
-              <span>The Rising Tribe Studios</span>
-              <span aria-hidden="true">·</span>
-              <span>Android Suite</span>
-              <span aria-hidden="true">·</span>
-              <span>Cloud Enabled</span>
-            </div>
-            <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-              Image to PDF Studio
-            </h1>
-            <p className="mt-1 max-w-2xl text-xs text-slate-400">
-              Convert JPG, PNG, and WebP collections into publication-grade PDF documents with
-              precise margins, page numbering, custom studio layout presets, and instant cloud sync.
-            </p>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* Hero header */}
+      <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-slate-800/80 pb-6">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-medium text-amber-400">
+            <span>The Rising Tribe App Studio</span>
+            <span aria-hidden="true">·</span>
+            <span>Image to PDF Conversion</span>
+            <span aria-hidden="true">·</span>
+            <span>Cloud Enabled</span>
           </div>
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            Image to PDF Studio
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm text-slate-400">
+            Convert JPG, PNG, and WebP collections into publication-grade PDF documents with
+            precise margins, page numbering, custom studio layout presets, and instant cloud sync.
+          </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0 self-start md:self-auto">
+        <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={loadSampleSet}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-700 hover:border-sky-500/40 bg-slate-900/90 px-3.5 py-2 text-xs font-medium text-slate-200 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-slate-700 hover:border-amber-500/40 bg-slate-900/80 px-3.5 py-2 text-xs font-medium text-slate-300 hover:text-white transition-colors"
           >
-            <Sparkles className="h-3.5 w-3.5 text-sky-400" />
+            <Sparkles className="h-3.5 w-3.5 text-amber-400" />
             <span>Load Sample Studio Folio</span>
           </button>
         </div>

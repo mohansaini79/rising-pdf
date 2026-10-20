@@ -185,7 +185,7 @@ export const CloudVault: React.FC<CloudVaultProps> = ({
   const quotaPercent = Math.min(100, Math.max(0.5, (stats.usedBytes / stats.totalBytes) * 100));
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Share Modal */}
       <ShareModal
         isOpen={!!activeShareDoc}
@@ -194,29 +194,22 @@ export const CloudVault: React.FC<CloudVaultProps> = ({
       />
 
       {/* Hero & Cloud Status banner */}
-      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800/80 pb-5">
-        <div className="flex items-start gap-3.5">
-          <img
-            src="/assets/aistudio/Gemini_Generated_Image_vz4sbhvz4sbhvz4s_4b141ba5.png"
-            alt="The Rising Tribe"
-            className="h-12 w-12 rounded-2xl object-contain border border-sky-500/30 bg-[#070D18] p-1 shadow-md shrink-0"
-          />
-          <div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-sky-400">
-              <span>The Rising Tribe Studios</span>
-              <span aria-hidden="true">·</span>
-              <span>Cloud Vault</span>
-              <span aria-hidden="true">·</span>
-              <span>Persistent Storage</span>
-            </div>
-            <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-              Cloud Document Vault
-            </h1>
-            <p className="mt-1 max-w-2xl text-xs text-slate-400">
-              Persistent cloud storage for The Rising Tribe Studios. Browse, restore revisions,
-              dispatch to external clouds, or open directly in the studio editor.
-            </p>
+      <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-slate-800/80 pb-6">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-medium text-amber-400">
+            <span>The Rising Tribe App Studio</span>
+            <span aria-hidden="true">·</span>
+            <span>Studio Cloud Vault</span>
+            <span aria-hidden="true">·</span>
+            <span>Real-time Document Storage</span>
           </div>
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            Cloud Document Vault
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm text-slate-400">
+            Persistent cloud storage for The Rising Tribe App Studio. Browse, restore revisions,
+            dispatch to external clouds, or open directly in the studio editor.
+          </p>
         </div>
 
         {/* Cloud actions */}

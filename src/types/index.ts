@@ -85,24 +85,3 @@ export interface StudioStorageStats {
   cloudHealth: 'healthy' | 'syncing' | 'offline';
 }
 
-export type HistoryActionType =
-  | 'convert_image_pdf'
-  | 'edit_pdf'
-  | 'sign_document'
-  | 'merge_pdf'
-  | 'cloud_sync'
-  | 'download'
-  | 'export_share';
-
-export interface HistoryRecord {
-  id: string;
-  title: string;
-  actionType: HistoryActionType;
-  timestamp: number;
-  pageCount: number;
-  sizeBytes: number;
-  details: string;
-  status: 'Completed' | 'Cloud Synced' | 'Exported';
-  thumbnailUrl?: string;
-  pdfDataUrl?: string;
-}

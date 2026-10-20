@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
             <Layers className="h-5 w-5" />
           </div>
           <span className="text-base font-bold tracking-tight text-white group-hover:text-amber-300 transition-colors">
-            The Rising Tribe Studios
+            The Rising Tribe App Studio
           </span>
         </button>
 

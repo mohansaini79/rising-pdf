@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 import { PdfEngine } from '../services/pdfEngine';
 import { CloudStorageService } from '../services/cloudStorage';
-import { HistoryService } from '../services/historyService';
 import { CloudDocument } from '../types';
 
 interface BatchMergerProps {
@@ -118,17 +117,6 @@ export const BatchMerger: React.FC<BatchMergerProps> = ({
         ...res,
         dataUrl,
       });
-
-      // Record merge in activity history
-      await HistoryService.addRecord({
-        title: mergedTitle || 'Studio Merged Publication',
-        actionType: 'merge_pdf',
-        pageCount: res.pageCount,
-        sizeBytes: res.sizeBytes,
-        details: `Combined ${items.length} PDF documents into unified publication`,
-        status: 'Completed',
-        pdfDataUrl: dataUrl,
-      });
     } catch (e) {
       console.error('Merge failed:', e);
     } finally {
@@ -166,19 +154,6 @@ export const BatchMerger: React.FC<BatchMergerProps> = ({
       };
 
       await CloudStorageService.saveDocument(docRecord);
-
-      // Record cloud save in history
-      await HistoryService.addRecord({
-        title: docRecord.title,
-        actionType: 'cloud_sync',
-        pageCount: docRecord.pageCount,
-        sizeBytes: docRecord.sizeBytes,
-        details: `Saved merged publication to Studio Cloud Vault`,
-        status: 'Cloud Synced',
-        thumbnailUrl: thumb,
-        pdfDataUrl: mergedResult.dataUrl,
-      });
-
       onDocumentSavedToCloud();
     } catch (e) {
       console.error('Failed to save merged PDF to cloud:', e);
@@ -270,38 +245,31 @@ export const BatchMerger: React.FC<BatchMergerProps> = ({
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6">
-      {/* Header with official logo */}
-      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800/80 pb-5">
-        <div className="flex items-start gap-3.5">
-          <img
-            src="/assets/aistudio/Gemini_Generated_Image_vz4sbhvz4sbhvz4s_4b141ba5.png"
-            alt="The Rising Tribe"
-            className="h-12 w-12 rounded-2xl object-contain border border-sky-500/30 bg-[#070D18] p-1 shadow-md shrink-0"
-          />
-          <div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-sky-400">
-              <span>The Rising Tribe Studios</span>
-              <span aria-hidden="true">·</span>
-              <span>Batch PDF Merger</span>
-              <span aria-hidden="true">·</span>
-              <span>Cloud Synchronized</span>
-            </div>
-            <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-              Batch PDF Merger
-            </h1>
-            <p className="mt-1 max-w-2xl text-xs text-slate-400">
-              Combine multiple PDF documents, presentations, and studio folios into a single cohesive
-              file with lossless vector quality and unified page indexing.
-            </p>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* Header */}
+      <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-slate-800/80 pb-6">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-medium text-amber-400">
+            <span>The Rising Tribe App Studio</span>
+            <span aria-hidden="true">·</span>
+            <span>Batch PDF Merger</span>
+            <span aria-hidden="true">·</span>
+            <span>Cloud Synchronized</span>
           </div>
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            Batch PDF Merger
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm text-slate-400">
+            Combine multiple PDF documents, presentations, and studio folios into a single cohesive
+            file with lossless vector quality and unified page indexing.
+          </p>
         </div>
 
         <button
           onClick={loadDemoPdfs}
-          className="flex items-center gap-1.5 rounded-xl border border-slate-700 hover:border-sky-500/40 bg-slate-900/90 px-3.5 py-2 text-xs font-medium text-slate-200 hover:text-white transition-colors self-start md:self-auto"
+          className="flex items-center gap-1.5 rounded-lg border border-slate-700 hover:border-amber-500/40 bg-slate-900/80 px-3.5 py-2 text-xs font-medium text-slate-300 hover:text-white transition-colors"
         >
-          <Sparkles className="h-3.5 w-3.5 text-sky-400" />
+          <Sparkles className="h-3.5 w-3.5 text-amber-400" />
           <span>Load 2 Sample Documents</span>
         </button>
       </div>
